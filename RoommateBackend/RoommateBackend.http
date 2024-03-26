@@ -1,0 +1,6 @@
+@RoommateBackend_HostAddress = http://localhost:5031
+
+GET {{RoommateBackend_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
