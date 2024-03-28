@@ -1,14 +1,4 @@
-using System.Text;
-using Bookshelf.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using RoommateBackend.Data;
 using RoommateBackend.Extensions;
-using RoommateBackend.Models;
-using RoommateBackend.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
