@@ -16,30 +16,40 @@ namespace RoommateBackend.Data
         }
 
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<RoomImage> RoomImages { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<AppUser>()
-                .HasMany(u => u.Rooms)
-                .WithOne(r => r.Owner)
-                .HasForeignKey(r => r.OwnerId)
+            base.OnModelCreating(modelBuilder);
+
+            // Seed roles
+            List<IdentityRole> roles = new List<IdentityRole>
+            {
+                new IdentityRole {Name = "Admin", NormalizedName = "ADMIN"},
+                new IdentityRole {Name = "User", NormalizedName = "USER"}
+            };
+            modelBuilder.Entity<IdentityRole>().HasData(roles);
+
+            // Room and RoomImage (one-to-many)
+            modelBuilder.Entity<Room>()
+                .HasMany(r => r.Images)
+                .WithOne(i => i.Room)
+                .HasForeignKey(i => i.RoomId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // AppUser and Room (many-to-one as owner)
+            modelBuilder.Entity<Room>()
+                .HasOne(r => r.Owner)
+                .WithMany(u => u.Rooms)
+                .HasForeignKey(r => r.OwnerId)
+                .OnDelete(DeleteBehavior.NoAction);
+
+            // AppUser and Room (many-to-many as saved rooms)
             modelBuilder.Entity<AppUser>()
                 .HasMany(u => u.SavedRooms)
                 .WithMany(r => r.SavedBy)
                 .UsingEntity(j => j.ToTable("SavedRooms"));
-
-            modelBuilder.Entity<Room>()
-                .HasOne(r => r.Owner)
-                .WithMany(u => u.Rooms)
-                .HasForeignKey(r => r.OwnerId);
-
-            modelBuilder.Entity<Room>()
-                .HasMany(r => r.Images)
-                .WithOne()
-                .HasForeignKey("RoomId")
-                .OnDelete(DeleteBehavior.Cascade);
+                
         }
     }
 }
