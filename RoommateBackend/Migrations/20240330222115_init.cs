@@ -179,9 +179,7 @@ namespace RoommateBackend.Migrations
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     OwnerId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Latitude = table.Column<double>(type: "float", nullable: false),
-                    Longitude = table.Column<double>(type: "float", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    AddressId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -191,6 +189,31 @@ namespace RoommateBackend.Migrations
                         column: x => x.OwnerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RoomAddress",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ZipCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Latitude = table.Column<double>(type: "float", nullable: false),
+                    Longitude = table.Column<double>(type: "float", nullable: false),
+                    RoomId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RoomAddress", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RoomAddress_Rooms_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Rooms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -242,8 +265,8 @@ namespace RoommateBackend.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "1f54f462-c4a2-4851-b6ea-ea9b3f735564", null, "User", "USER" },
-                    { "b0c66293-981a-421f-a95c-3f54f8ee6a54", null, "Admin", "ADMIN" }
+                    { "6dd506b3-0706-413c-afb0-80cab4c0abda", null, "User", "USER" },
+                    { "af7d2f15-da74-422a-bdf4-d4ddf347861b", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -286,6 +309,12 @@ namespace RoommateBackend.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RoomAddress_RoomId",
+                table: "RoomAddress",
+                column: "RoomId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RoomImages_RoomId",
                 table: "RoomImages",
                 column: "RoomId");
@@ -318,6 +347,9 @@ namespace RoommateBackend.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "RoomAddress");
 
             migrationBuilder.DropTable(
                 name: "RoomImages");
