@@ -9,7 +9,7 @@ namespace RoommateBackend.Models
     public class Room
     {
         public int Id { get; set; }
-        public int Price { get; set; }
+        public double Price { get; set; }
         public int RoomCount { get; set; }
         public int BathCount { get; set; }
         public List<RoomImage> Images { get; set; } = new List<RoomImage>();
