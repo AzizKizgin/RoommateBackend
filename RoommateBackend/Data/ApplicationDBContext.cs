@@ -49,7 +49,13 @@ namespace RoommateBackend.Data
                 .HasMany(u => u.SavedRooms)
                 .WithMany(r => r.SavedBy)
                 .UsingEntity(j => j.ToTable("SavedRooms"));
-                
+
+            // Room and RoomAddress (one-to-one)
+            modelBuilder.Entity<Room>()
+                .HasOne(r => r.Address)
+                .WithOne(a => a.Room)
+                .HasForeignKey<RoomAddress>(a => a.RoomId)
+                .OnDelete(DeleteBehavior.Cascade); 
         }
     }
 }

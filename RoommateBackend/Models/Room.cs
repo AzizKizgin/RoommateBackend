@@ -20,8 +20,7 @@ namespace RoommateBackend.Models
         public AppUser Owner { get; set; }
         public string OwnerId { get; set; }
         public List<AppUser> SavedBy { get; set; } = new List<AppUser>();
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
-        public string Address { get; set; } = string.Empty;
+        public RoomAddress Address { get; set; }
+        public int AddressId { get; set; }
     }
 }
