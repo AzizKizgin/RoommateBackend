@@ -13,6 +13,6 @@ namespace RoommateBackend.Dtos.User
         public string LastName { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public string Job { get; set; } = string.Empty;
-    
+        public int Age { get; set; }
     }
 }
