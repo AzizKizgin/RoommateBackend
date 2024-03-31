@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using RoommateBackend.Dtos.Room;
 using RoommateBackend.Helpers;
 using RoommateBackend.Models;
 
@@ -13,8 +14,9 @@ namespace RoommateBackend.Repositories.Interfaces
         Task<IEnumerable<Room>> GetRooms(RoomQueryObject queryObject);
         Task<IEnumerable<Room>> GetRoomByUserId(int userId);
         Task<IEnumerable<Room>> GetUserSavedRooms(int userId);
-        Task<Room?> CreateRoom(Room room);
-        Task<Room?> UpdateRoom(Room room);
+        Task<Room?> FavoriteRoom(int userId, int roomId);
+        Task<Room?> CreateRoom(CreateRoomDto room);
+        Task<Room?> UpdateRoom(int id, UpdateRoomDto room);
         Task<Room?> DeleteRoom(int id);
     }
 }
