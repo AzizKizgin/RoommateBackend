@@ -66,13 +66,13 @@ namespace RoommateBackend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b0c66293-981a-421f-a95c-3f54f8ee6a54",
+                            Id = "af7d2f15-da74-422a-bdf4-d4ddf347861b",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "1f54f462-c4a2-4851-b6ea-ea9b3f735564",
+                            Id = "6dd506b3-0706-413c-afb0-80cab4c0abda",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -282,9 +282,8 @@ namespace RoommateBackend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("AddressId")
+                        .HasColumnType("int");
 
                     b.Property<int>("BathCount")
                         .HasColumnType("int");
@@ -295,12 +294,6 @@ namespace RoommateBackend.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<double>("Latitude")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Longitude")
-                        .HasColumnType("float");
 
                     b.Property<string>("OwnerId")
                         .IsRequired()
@@ -323,6 +316,47 @@ namespace RoommateBackend.Migrations
                     b.HasIndex("OwnerId");
 
                     b.ToTable("Rooms");
+                });
+
+            modelBuilder.Entity("RoommateBackend.Models.RoomAddress", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ZipCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoomId")
+                        .IsUnique();
+
+                    b.ToTable("RoomAddress");
                 });
 
             modelBuilder.Entity("RoommateBackend.Models.RoomImage", b =>
@@ -424,6 +458,17 @@ namespace RoommateBackend.Migrations
                     b.Navigation("Owner");
                 });
 
+            modelBuilder.Entity("RoommateBackend.Models.RoomAddress", b =>
+                {
+                    b.HasOne("RoommateBackend.Models.Room", "Room")
+                        .WithOne("Address")
+                        .HasForeignKey("RoommateBackend.Models.RoomAddress", "RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Room");
+                });
+
             modelBuilder.Entity("RoommateBackend.Models.RoomImage", b =>
                 {
                     b.HasOne("RoommateBackend.Models.Room", "Room")
@@ -442,6 +487,9 @@ namespace RoommateBackend.Migrations
 
             modelBuilder.Entity("RoommateBackend.Models.Room", b =>
                 {
+                    b.Navigation("Address")
+                        .IsRequired();
+
                     b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
