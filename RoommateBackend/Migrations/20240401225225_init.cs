@@ -171,9 +171,10 @@ namespace RoommateBackend.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Price = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
                     RoomCount = table.Column<int>(type: "int", nullable: false),
                     BathCount = table.Column<int>(type: "int", nullable: false),
+                    Images = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Size = table.Column<double>(type: "float", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -192,7 +193,7 @@ namespace RoommateBackend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RoomAddress",
+                name: "RoomAddresses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -207,29 +208,9 @@ namespace RoommateBackend.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RoomAddress", x => x.Id);
+                    table.PrimaryKey("PK_RoomAddresses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_RoomAddress_Rooms_RoomId",
-                        column: x => x.RoomId,
-                        principalTable: "Rooms",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "RoomImages",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Data = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    RoomId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_RoomImages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_RoomImages_Rooms_RoomId",
+                        name: "FK_RoomAddresses_Rooms_RoomId",
                         column: x => x.RoomId,
                         principalTable: "Rooms",
                         principalColumn: "Id",
@@ -265,8 +246,8 @@ namespace RoommateBackend.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "6dd506b3-0706-413c-afb0-80cab4c0abda", null, "User", "USER" },
-                    { "af7d2f15-da74-422a-bdf4-d4ddf347861b", null, "Admin", "ADMIN" }
+                    { "19af69d5-f0e8-4f3c-a16e-3e4aca6b56b7", null, "Admin", "ADMIN" },
+                    { "3a111938-4835-4bb6-a79f-073af734a37a", null, "User", "USER" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -309,15 +290,10 @@ namespace RoommateBackend.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RoomAddress_RoomId",
-                table: "RoomAddress",
+                name: "IX_RoomAddresses_RoomId",
+                table: "RoomAddresses",
                 column: "RoomId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_RoomImages_RoomId",
-                table: "RoomImages",
-                column: "RoomId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Rooms_OwnerId",
@@ -349,10 +325,7 @@ namespace RoommateBackend.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "RoomAddress");
-
-            migrationBuilder.DropTable(
-                name: "RoomImages");
+                name: "RoomAddresses");
 
             migrationBuilder.DropTable(
                 name: "SavedRooms");

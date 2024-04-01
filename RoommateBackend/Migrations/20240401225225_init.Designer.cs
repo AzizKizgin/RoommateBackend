@@ -12,8 +12,8 @@ using RoommateBackend.Data;
 namespace RoommateBackend.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240331225058_priceType")]
-    partial class priceType
+    [Migration("20240401225225_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -69,13 +69,13 @@ namespace RoommateBackend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3ff6606a-b388-4ced-bc3d-950848d8b6e6",
+                            Id = "19af69d5-f0e8-4f3c-a16e-3e4aca6b56b7",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "8ff301bd-e69a-4f95-aeaf-062c704fbf70",
+                            Id = "3a111938-4835-4bb6-a79f-073af734a37a",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -298,6 +298,10 @@ namespace RoommateBackend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Images")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -359,29 +363,7 @@ namespace RoommateBackend.Migrations
                     b.HasIndex("RoomId")
                         .IsUnique();
 
-                    b.ToTable("RoomAddress");
-                });
-
-            modelBuilder.Entity("RoommateBackend.Models.RoomImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<byte[]>("Data")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoomId");
-
-                    b.ToTable("RoomImages");
+                    b.ToTable("RoomAddresses");
                 });
 
             modelBuilder.Entity("AppUserRoom", b =>
@@ -472,17 +454,6 @@ namespace RoommateBackend.Migrations
                     b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("RoommateBackend.Models.RoomImage", b =>
-                {
-                    b.HasOne("RoommateBackend.Models.Room", "Room")
-                        .WithMany("Images")
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Room");
-                });
-
             modelBuilder.Entity("RoommateBackend.Models.AppUser", b =>
                 {
                     b.Navigation("Rooms");
@@ -492,8 +463,6 @@ namespace RoommateBackend.Migrations
                 {
                     b.Navigation("Address")
                         .IsRequired();
-
-                    b.Navigation("Images");
                 });
 #pragma warning restore 612, 618
         }

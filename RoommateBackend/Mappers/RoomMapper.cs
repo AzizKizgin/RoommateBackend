@@ -20,12 +20,10 @@ namespace RoommateBackend.Mappers
                 Description = createRoomDto.Description,
                 CreatedAt = createRoomDto.CreatedAt,
                 Address = createRoomDto.Address.ToRoomAddress(),
-                Images = createRoomDto
-                    .Images
-                    .Select(
-                        image => new RoomImage 
-                        { Data = Convert.FromBase64String(createRoomDto.Images[0])}
-                    ).ToList(),
+                Images = createRoomDto.Images.Select(
+                    image => Convert.FromBase64String(image)
+                ).ToList(),
+ 
             };
         }
 
@@ -40,12 +38,9 @@ namespace RoommateBackend.Mappers
                 Description = updateRoomDto.Description,
                 UpdatedAt = updateRoomDto.UpdatedAt,
                 Address = updateRoomDto.Address.ToRoomAddress(),
-                Images = updateRoomDto
-                    .Images
-                    .Select(
-                        image => new RoomImage 
-                        { Data = Convert.FromBase64String(updateRoomDto.Images[0])}
-                    ).ToList(),
+                Images = updateRoomDto.Images.Select(
+                    image => Convert.FromBase64String(image)
+                ).ToList(),
             };
         }
 
@@ -57,7 +52,9 @@ namespace RoommateBackend.Mappers
                 Price = room.Price,
                 RoomCount = room.RoomCount,
                 BathCount = room.BathCount,
-                Images = room.Images.Select(image => Convert.ToBase64String(image.Data)).ToList(),
+                Images = room.Images.Select(
+                    image => Convert.ToBase64String(image)
+                ).ToList(),
                 Size = room.Size,
                 Description = room.Description,
                 CreatedAt = room.CreatedAt,

@@ -12,7 +12,7 @@ namespace RoommateBackend.Models
         public double Price { get; set; }
         public int RoomCount { get; set; }
         public int BathCount { get; set; }
-        public List<RoomImage> Images { get; set; } = new List<RoomImage>();
+        public List<byte[]> Images { get; set; }
         public double Size { get; set; }
         public string Description { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }

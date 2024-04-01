@@ -16,7 +16,8 @@ namespace RoommateBackend.Data
         }
 
         public DbSet<Room> Rooms { get; set; }
-        public DbSet<RoomImage> RoomImages { get; set; }
+        public DbSet<RoomAddress> RoomAddresses { get; set; }
+
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -29,13 +30,6 @@ namespace RoommateBackend.Data
                 new IdentityRole {Name = "User", NormalizedName = "USER"}
             };
             modelBuilder.Entity<IdentityRole>().HasData(roles);
-
-            // Room and RoomImage (one-to-many)
-            modelBuilder.Entity<Room>()
-                .HasMany(r => r.Images)
-                .WithOne(i => i.Room)
-                .HasForeignKey(i => i.RoomId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             // AppUser and Room (many-to-one as owner)
             modelBuilder.Entity<Room>()
