@@ -15,12 +15,39 @@ namespace RoommateBackend.Helpers
         public int? MaxBathCount { get; set; }
         public double? MinSize { get; set; }
         public double? MaxSize { get; set; }
-        public int? Page { get; set; } = 1;
-        public int? PageSize { get; set; } = 15;
+        public int Page { get; set; } = 1;
+        public int PageSize { get; set; } = 15;
         public string? Street { get; set; }
         public string? City { get; set; }
         public string? State { get; set; }
-        public string? Latitude { get; set; }
-        public string? Longitude { get; set; }
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
+        public double? Distance { get; set; }
+        public SortByProperty? SortBy { get; set; }
+        public SortDirection SortDirection { get; set; } = SortDirection.Asc;
+        public DateRange? DateRange { get; set; }
     }
+
+    public enum SortByProperty
+    {
+        Price,
+        RoomCount,
+        BathCount,
+        Size
+    } 
+
+    public enum SortDirection
+    {
+        Asc,
+        Desc
+    }
+
+    public enum DateRange
+    {
+        Today,
+        ThisWeek,
+        ThisMonth,
+        ThisYear
+    }
+
 }
