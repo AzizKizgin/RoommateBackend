@@ -21,5 +21,18 @@ namespace RoommateBackend.Mappers
                 Longitude = roomAddressDto.Longitude
             };
         }
+
+        public static RoomAddressDto ToRoomAddressDto(this RoomAddress roomAddress)
+        {
+            return new RoomAddressDto
+            {
+                Street = roomAddress.Street,
+                City = roomAddress.City,
+                State = roomAddress.State,
+                ZipCode = roomAddress.ZipCode,
+                Latitude = roomAddress.Latitude,
+                Longitude = roomAddress.Longitude
+            };
+        }
     }
 }
