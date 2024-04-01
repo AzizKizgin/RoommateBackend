@@ -50,5 +50,22 @@ namespace RoommateBackend.Mappers
                 CreatedAt = appUser.CreatedAt,
             };
         }
+
+        public static UserDto ToUserDto(this AppUser appUser)
+        {
+            return new UserDto
+            {
+                Id = appUser.Id,
+                FirstName = appUser.FirstName,
+                LastName = appUser.LastName,
+                ProfilePicture = appUser.ProfilePicture != null ? Convert.ToBase64String(appUser.ProfilePicture) : string.Empty,
+                Description = appUser.Description,
+                Age = appUser.Age,
+                Job = appUser.Job,
+                CreatedAt = appUser.CreatedAt,
+                Rooms = appUser.Rooms.Select(room => room.ToRoomDto()).ToList(),
+                SavedRooms = appUser.SavedRooms.Select(room => room.ToRoomDto()).ToList(),
+            };
+        }
     }
 }
