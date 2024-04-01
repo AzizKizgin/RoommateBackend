@@ -48,5 +48,24 @@ namespace RoommateBackend.Mappers
                     ).ToList(),
             };
         }
+
+        public static RoomDto ToRoomDto(this Room room)
+        {
+            return new RoomDto
+            {
+                Id = room.Id,
+                Price = room.Price,
+                RoomCount = room.RoomCount,
+                BathCount = room.BathCount,
+                Images = room.Images.Select(image => Convert.ToBase64String(image.Data)).ToList(),
+                Size = room.Size,
+                Description = room.Description,
+                CreatedAt = room.CreatedAt,
+                UpdatedAt = room.UpdatedAt,
+                Owner = room.Owner.ToRoomOwnerDto(),
+                SavedByCount = room.SavedBy.Count,
+                Address = room.Address.ToRoomAddressDto(),
+            };
+        }
     }
 }
