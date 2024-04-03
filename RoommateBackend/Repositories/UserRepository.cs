@@ -93,5 +93,24 @@ namespace RoommateBackend.Repositories
             }
             return null;
         }
+
+        public async Task<IEnumerable<Room>> GetRoomByUserId(string userId)
+        {
+            var room = await _context.Rooms
+                            .Include(r => r.Owner)
+                            .Include(r => r.Address)
+                            .Where(r => r.OwnerId == userId)
+                            .ToListAsync();
+            return room;
+        }
+
+        public async Task<IEnumerable<Room>> GetUserSavedRooms(string userId)
+        {
+            var rooms = _context.Rooms
+                            .Include(r => r.Owner)
+                            .Include(r => r.Address)
+                            .Where(r => r.SavedBy.Any(u => u.Id == userId));
+            return await rooms.ToListAsync();
+        }
     }
 }
