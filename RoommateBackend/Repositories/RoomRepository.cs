@@ -31,10 +31,14 @@ namespace RoommateBackend.Repositories
             return result.Entity;
         }
 
-        public async Task<Room?> DeleteRoom(int id)
+        public async Task<Room?> DeleteRoom(int id, string userId)
         {
             var room = await _context.Rooms.FindAsync(id);
             if (room == null)
+            {
+                return null;
+            }
+            if (room.OwnerId != userId)
             {
                 return null;
             }
@@ -74,16 +78,6 @@ namespace RoommateBackend.Repositories
                             .Include(r => r.Owner)
                             .Include(r => r.Address)
                             .FirstOrDefaultAsync(r => r.Id == id);
-            return room;
-        }
-
-        public async Task<IEnumerable<Room>> GetRoomByUserId(string userId)
-        {
-            var room = await _context.Rooms
-                            .Include(r => r.Owner)
-                            .Include(r => r.Address)
-                            .Where(r => r.OwnerId == userId)
-                            .ToListAsync();
             return room;
         }
 
@@ -185,19 +179,14 @@ namespace RoommateBackend.Repositories
                         .ToListAsync();
         }
 
-        public async Task<IEnumerable<Room>> GetUserSavedRooms(string userId)
-        {
-            var rooms = _context.Rooms
-                            .Include(r => r.Owner)
-                            .Include(r => r.Address)
-                            .Where(r => r.SavedBy.Any(u => u.Id == userId));
-            return await rooms.ToListAsync();
-        }
-
-        public async Task<Room?> UpdateRoom(int id, UpdateRoomDto room)
+        public async Task<Room?> UpdateRoom(int id, string userId, UpdateRoomDto room)
         {
             var existingRoom = await _context.Rooms.FindAsync(id);
             if (existingRoom == null)
+            {
+                return null;
+            }
+            if (existingRoom.OwnerId != userId)
             {
                 return null;
             }

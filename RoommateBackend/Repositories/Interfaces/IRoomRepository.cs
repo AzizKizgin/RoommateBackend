@@ -12,11 +12,9 @@ namespace RoommateBackend.Repositories.Interfaces
     {
         Task<Room?> GetRoomById(int id);
         Task<IEnumerable<Room>> GetRooms(RoomQueryObject queryObject);
-        Task<IEnumerable<Room>> GetRoomByUserId(string userId);
-        Task<IEnumerable<Room>> GetUserSavedRooms(string userId);
         Task<Room?> FavoriteRoom(string userId, int roomId);
         Task<Room?> CreateRoom(CreateRoomDto room);
-        Task<Room?> UpdateRoom(int id, UpdateRoomDto room);
-        Task<Room?> DeleteRoom(int id);
+        Task<Room?> UpdateRoom(int id, string userId, UpdateRoomDto room);
+        Task<Room?> DeleteRoom(int id, string userId);
     }
 }
