@@ -23,11 +23,20 @@ namespace RoommateBackend.Repositories
             _userManager = userManger;
         }
 
-        public async Task<IdentityResult?> CreateUser(CreateUserDto user)
+        public async Task<AppUser?> CreateUser(CreateUserDto user)
         {
             var newUser = user.ToUser();
             var result = await _userManager.CreateAsync(newUser, user.Password);
-            return result;
+            if (result.Succeeded)
+            {
+                var userRoleResult = await _userManager.AddToRoleAsync(newUser, "User");
+                if (!userRoleResult.Succeeded)
+                {
+                    await _userManager.DeleteAsync(newUser);
+                    return null;
+                }
+            }
+            return newUser;
         }
 
         public async Task<AppUser?> DeleteUser(string id)
@@ -69,6 +78,20 @@ namespace RoommateBackend.Repositories
             var result = _context.Users.Update(userToUpdate);
             await _context.SaveChangesAsync();
             return result.Entity;
+        }
+
+        public async Task<AppUser?> LoginUser(LoginUserDto user)
+        {
+            var userToLogin = await _userManager.FindByEmailAsync(user.Email);
+            if (userToLogin != null)
+            {
+                var result = await _userManager.CheckPasswordAsync(userToLogin, user.Password);
+                if (result)
+                {
+                    return userToLogin;
+                }
+            }
+            return null;
         }
     }
 }

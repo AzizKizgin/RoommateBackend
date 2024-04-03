@@ -11,8 +11,9 @@ namespace RoommateBackend.Repositories.Interfaces
     public interface IUserRepository
     {
         Task<AppUser?> GetUserById(string id);
-        Task<IdentityResult?> CreateUser(CreateUserDto user);
+        Task<AppUser?> CreateUser(CreateUserDto user);
         Task<AppUser?> UpdateUser(string id, UpdateUserDto user);
         Task<AppUser?> DeleteUser(string id);
+        Task<AppUser?> LoginUser(LoginUserDto user);
     }
 }
