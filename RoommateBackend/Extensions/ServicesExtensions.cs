@@ -11,6 +11,8 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RoommateBackend.Data;
 using RoommateBackend.Models;
+using RoommateBackend.Repositories;
+using RoommateBackend.Repositories.Interfaces;
 using RoommateBackend.Services.Interfaces;
 
 namespace RoommateBackend.Extensions
@@ -99,6 +101,10 @@ namespace RoommateBackend.Extensions
 
         public static void ConfigureServices(this IServiceCollection services){
             services.AddScoped<ITokenService, TokenService>();
+        }
+        public static void ConfigureRepositories(this IServiceCollection services){
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoomRepository, RoomRepository>();
         }
     }
 }

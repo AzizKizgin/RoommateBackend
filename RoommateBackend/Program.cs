@@ -10,6 +10,7 @@ builder.Services.ConfigureIdentity(builder.Configuration);
 builder.Services.ConfigureSwaggerGen();
 builder.Services.ConfigureControllers();
 builder.Services.ConfigureServices();
+builder.Services.ConfigureRepositories();
 
 
 var app = builder.Build();
