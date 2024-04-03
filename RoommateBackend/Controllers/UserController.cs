@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RoommateBackend.Dtos.User;
 using RoommateBackend.Mappers;
@@ -54,8 +55,14 @@ namespace RoommateBackend.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteUser(string id)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            if (userId != id)
+            {
+                return Unauthorized("You are not authorized to delete this user.");
+            }
             var deletedUser = await _userRepository.DeleteUser(id);
             if (deletedUser == null)
             {
@@ -65,14 +72,40 @@ namespace RoommateBackend.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserDto user)
         {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            if (userId != id)
+            {
+                return Unauthorized("You are not authorized to update this user.");
+            }
             var updatedUser = await _userRepository.UpdateUser(id, user);
             if (updatedUser == null)
             {
                 return NotFound();
             }
             return Ok(updatedUser.ToUserDto());
+        }
+
+        [HttpGet("{id}/rooms")]
+        public async Task<IActionResult> GetUserRooms(string id)
+        {
+            var rooms = await _userRepository.GetRoomByUserId(id);
+            return Ok(rooms.Select(r => r.ToRoomDto()));
+        }
+
+        [HttpGet("{id}/saved-rooms")]
+        [Authorize]
+        public async Task<IActionResult> GetUserSavedRooms(string id)
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            if (userId != id)
+            {
+                return Unauthorized("You are not authorized to view this user's saved rooms.");
+            }
+            var rooms = await _userRepository.GetUserSavedRooms(id);
+            return Ok(rooms.Select(r => r.ToRoomDto()));
         }
     }
 }
