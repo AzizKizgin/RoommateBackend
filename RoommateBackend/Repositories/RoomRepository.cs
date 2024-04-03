@@ -16,11 +16,11 @@ namespace RoommateBackend.Repositories
     public class RoomRepository : IRoomRepository
     {
         private readonly ApplicationDBContext _context;
-        private readonly UserManager<AppUser> _userManger;
+        private readonly UserManager<AppUser> _userManager;
         public RoomRepository(ApplicationDBContext context, UserManager<AppUser> userManger)
         {
             _context = context;
-            _userManger = userManger;
+            _userManager = userManger;
         }
 
         public async Task<Room?> CreateRoom(CreateRoomDto room)
@@ -64,7 +64,7 @@ namespace RoommateBackend.Repositories
                 user.SavedRooms.Add(room);
             }
             await _context.SaveChangesAsync();
-            await _userManger.UpdateAsync(user);
+            await _userManager.UpdateAsync(user);
             return room;
         }
 
@@ -208,7 +208,7 @@ namespace RoommateBackend.Repositories
             existingRoom.Size = room.Size;
             existingRoom.Description = room.Description;
             existingRoom.UpdatedAt = room.UpdatedAt;
-            existingRoom.Address = room.Address.ToRoomAddress();
+            existingRoom.Address.UpdateRoomAddress(room.Address);
             var result = _context.Rooms.Update(existingRoom);
             await _context.SaveChangesAsync();
             return result.Entity;
