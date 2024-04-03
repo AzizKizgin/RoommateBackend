@@ -34,5 +34,16 @@ namespace RoommateBackend.Mappers
                 Longitude = roomAddress.Longitude
             };
         }
+
+        public static RoomAddress UpdateRoomAddress(this RoomAddress roomAddress, RoomAddressDto roomAddressDto)
+        {
+            roomAddress.Street = roomAddressDto.Street;
+            roomAddress.City = roomAddressDto.City;
+            roomAddress.State = roomAddressDto.State;
+            roomAddress.ZipCode = roomAddressDto.ZipCode;
+            roomAddress.Latitude = roomAddressDto.Latitude;
+            roomAddress.Longitude = roomAddressDto.Longitude;
+            return roomAddress;
+        }
     }
 }
