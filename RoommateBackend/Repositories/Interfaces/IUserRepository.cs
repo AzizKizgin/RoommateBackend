@@ -15,6 +15,7 @@ namespace RoommateBackend.Repositories.Interfaces
         Task<AppUser?> UpdateUser(string id, UpdateUserDto user);
         Task<AppUser?> DeleteUser(string id);
         Task<AppUser?> LoginUser(LoginUserDto user);
+        Task<bool?> LogoutUser(string id);
         Task<IEnumerable<Room>> GetRoomByUserId(string userId);
         Task<IEnumerable<Room>> GetUserSavedRooms(string userId);
     }

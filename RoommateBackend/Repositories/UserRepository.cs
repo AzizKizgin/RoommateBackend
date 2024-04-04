@@ -16,11 +16,16 @@ namespace RoommateBackend.Repositories
     {
         private readonly ApplicationDBContext _context;
         private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
         
-        public UserRepository(ApplicationDBContext context, UserManager<AppUser> userManger)
+        public UserRepository(
+            ApplicationDBContext context, 
+            UserManager<AppUser> userManger, 
+            SignInManager<AppUser> signInManager)
         {
             _context = context;
             _userManager = userManger;
+            _signInManager = signInManager;
         }
 
         public async Task<AppUser?> CreateUser(CreateUserDto user)
@@ -85,13 +90,26 @@ namespace RoommateBackend.Repositories
             var userToLogin = await _userManager.FindByEmailAsync(user.Email);
             if (userToLogin != null)
             {
-                var result = await _userManager.CheckPasswordAsync(userToLogin, user.Password);
-                if (result)
+                var result = await _signInManager.CheckPasswordSignInAsync(userToLogin, user.Password, false);
+                if (result.Succeeded)
                 {
                     return userToLogin;
                 }
             }
             return null;
+        }
+        
+        public async Task<bool?> LogoutUser(string id)
+        {
+            try
+            {
+                await _signInManager.SignOutAsync();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public async Task<IEnumerable<Room>> GetRoomByUserId(string userId)

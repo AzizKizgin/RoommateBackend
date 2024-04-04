@@ -54,6 +54,23 @@ namespace RoommateBackend.Controllers
             return Ok(loggedInUser.ToUserDto());
         }
 
+        [HttpPost("logout")]
+        [Authorize]
+        public async Task<IActionResult> LogoutUser()
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+            if (userId == null)
+            {
+                return BadRequest("User could not be logged out.");
+            }
+            var result = await _userRepository.LogoutUser(userId);
+            if (result == false)
+            {
+                return BadRequest("User could not be logged out.");
+            }
+            return Ok();
+        }
+
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> DeleteUser(string id)
