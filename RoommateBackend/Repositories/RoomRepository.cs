@@ -23,9 +23,16 @@ namespace RoommateBackend.Repositories
             _userManager = userManger;
         }
 
-        public async Task<Room?> CreateRoom(CreateRoomDto room)
+        public async Task<Room?> CreateRoom(CreateRoomDto room, string username)
         {
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+            {
+                throw new Exception("User not found.");
+            }
             var newRoom = room.ToRoomFromCreateRoomDto();
+            newRoom.Owner = user;
+            newRoom.OwnerId = user.Id;
             var result = await _context.Rooms.AddAsync(newRoom);
             await _context.SaveChangesAsync();
             return result.Entity;
