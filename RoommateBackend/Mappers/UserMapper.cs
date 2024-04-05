@@ -20,6 +20,7 @@ namespace RoommateBackend.Mappers
                 Job = createUserDto.Job,
                 Age = createUserDto.Age,
                 CreatedAt = DateTime.Now,
+                UserName = createUserDto.Email,
             };
         }
 
