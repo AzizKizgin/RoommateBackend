@@ -65,6 +65,8 @@ namespace RoommateBackend.Mappers
                 CreatedAt = appUser.CreatedAt,
                 Rooms = appUser.Rooms.Select(room => room.ToRoomDto()).ToList(),
                 SavedRooms = appUser.SavedRooms.Select(room => room.ToRoomDto()).ToList(),
+                Email = appUser.Email ?? string.Empty,
+                PhoneNumber = appUser.PhoneNumber ?? string.Empty,
             };
         }
     }

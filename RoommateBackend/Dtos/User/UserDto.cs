@@ -10,7 +10,7 @@ namespace RoommateBackend.Dtos.User
     {
         public string Id { get; set; }
         public string FirstName { get; set; }
-        public string LastName { get; set; }
+        public string LastName { get; set; } 
         public string? ProfilePicture { get; set; }
         public List<RoomDto> Rooms { get; set; } = new List<RoomDto>();
         public List<RoomDto> SavedRooms { get; set; } = new List<RoomDto>();
@@ -18,5 +18,8 @@ namespace RoommateBackend.Dtos.User
         public string Description { get; set; } = string.Empty;
         public int Age { get; set; }
         public string Job { get; set; } = string.Empty;
+        public string PhoneNumber { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty;
+        public string? Token { get; set; }
     }
 }
