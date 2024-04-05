@@ -56,6 +56,12 @@ namespace RoommateBackend.Controllers
                     return BadRequest("Invalid user data.");
                 }
                 
+                var existingUser = await _userManager.FindByEmailAsync(user.Email);
+                if (existingUser != null)
+                {
+                    return BadRequest("User with this email already exists.");
+                }
+
                 var newUser = await _userRepository.CreateUser(user);
                 if (newUser == null)
                 {
@@ -157,6 +163,10 @@ namespace RoommateBackend.Controllers
         {
             try
             {
+                if (ModelState.IsValid == false)
+                {
+                    return BadRequest("Invalid user data.");
+                }
                 var username = User.Identity.Name;
                 if (username == null)
                 {
