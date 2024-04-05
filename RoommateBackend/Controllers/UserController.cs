@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using RoommateBackend.Dtos.User;
 using RoommateBackend.Mappers;
 using RoommateBackend.Repositories.Interfaces;
+using RoommateBackend.Services.Interfaces;
 
 namespace RoommateBackend.Controllers
 {
@@ -15,114 +16,173 @@ namespace RoommateBackend.Controllers
     public class UserController: ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly ITokenService _tokenService;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserRepository userRepository, ITokenService tokenService)
         {
             _userRepository = userRepository;
+            _tokenService = tokenService;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(string id)
         {
-            var user = await _userRepository.GetUserById(id);
-            if (user == null)
-            {
-                return NotFound();
+            try{
+                var user = await _userRepository.GetUserById(id);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                return Ok(user.ToUserDto());
             }
-            return Ok(user.ToUserDto());
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDto user)
         {
-            var newUser = await _userRepository.CreateUser(user);
-            if (newUser == null)
+            try
             {
-                return BadRequest("User could not be created.");
+                var newUser = await _userRepository.CreateUser(user);
+                if (newUser == null)
+                {
+                    return BadRequest("User could not be created.");
+                }
+                return Ok(newUser.ToUserDto());
             }
-            return Ok(newUser.ToUserDto());
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
         
         [HttpPost("login")]
         public async Task<IActionResult> LoginUser([FromBody] LoginUserDto user)
         {
-            var loggedInUser = await _userRepository.LoginUser(user);
-            if (loggedInUser == null)
+            try
             {
-                return BadRequest("User could not be logged in. Check your credentials.");
+                var loggedInUser = await _userRepository.LoginUser(user);
+                if (loggedInUser == null)
+                {
+                    return BadRequest("User could not be logged in. Check your credentials.");
+                }
+                var userDto = loggedInUser.ToUserDto();
+                userDto.Token = _tokenService.GenerateToken(loggedInUser);
+                return Ok(userDto);
             }
-            return Ok(loggedInUser.ToUserDto());
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost("logout")]
         [Authorize]
         public async Task<IActionResult> LogoutUser()
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
-            if (userId == null)
+            try
             {
-                return BadRequest("User could not be logged out.");
+                var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+                if (userId == null)
+                {
+                    return BadRequest("User could not be logged out.");
+                }
+                var result = await _userRepository.LogoutUser(userId);
+                if (result == false)
+                {
+                    return BadRequest("User could not be logged out.");
+                }
+                return Ok();
             }
-            var result = await _userRepository.LogoutUser(userId);
-            if (result == false)
+            catch (Exception e)
             {
-                return BadRequest("User could not be logged out.");
+                return BadRequest(e.Message);
             }
-            return Ok();
         }
 
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
-            if (userId != id)
+            try
             {
-                return Unauthorized("You are not authorized to delete this user.");
+                var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+                if (userId != id)
+                {
+                    return Unauthorized("You are not authorized to delete this user.");
+                }
+                var deletedUser = await _userRepository.DeleteUser(id);
+                if (deletedUser == null)
+                {
+                    return NotFound();
+                }
+                return Ok(deletedUser.ToUserDto());
             }
-            var deletedUser = await _userRepository.DeleteUser(id);
-            if (deletedUser == null)
+            catch (Exception e)
             {
-                return NotFound();
+                return BadRequest(e.Message);
             }
-            return Ok(deletedUser.ToUserDto());
         }
 
         [HttpPut("{id}")]
         [Authorize]
         public async Task<IActionResult> UpdateUser(string id, [FromBody] UpdateUserDto user)
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
-            if (userId != id)
+            try
             {
-                return Unauthorized("You are not authorized to update this user.");
+                var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+                if (userId != id)
+                {
+                    return Unauthorized("You are not authorized to update this user.");
+                }
+                var updatedUser = await _userRepository.UpdateUser(id, user);
+                if (updatedUser == null)
+                {
+                    return NotFound();
+                }
+                return Ok(updatedUser.ToUserDto());
             }
-            var updatedUser = await _userRepository.UpdateUser(id, user);
-            if (updatedUser == null)
+            catch (Exception e)
             {
-                return NotFound();
+                return BadRequest(e.Message);
             }
-            return Ok(updatedUser.ToUserDto());
         }
 
         [HttpGet("{id}/rooms")]
         public async Task<IActionResult> GetUserRooms(string id)
         {
-            var rooms = await _userRepository.GetRoomByUserId(id);
-            return Ok(rooms.Select(r => r.ToRoomDto()));
+            try
+            {
+                var rooms = await _userRepository.GetRoomByUserId(id);
+                return Ok(rooms.Select(r => r.ToRoomDto()));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet("{id}/saved-rooms")]
         [Authorize]
         public async Task<IActionResult> GetUserSavedRooms(string id)
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
-            if (userId != id)
+            try
             {
-                return Unauthorized("You are not authorized to view this user's saved rooms.");
+                var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+                if (userId != id)
+                {
+                    return Unauthorized("You are not authorized to view this user's saved rooms.");
+                }
+                var rooms = await _userRepository.GetUserSavedRooms(id);
+                return Ok(rooms.Select(r => r.ToRoomDto()));
             }
-            var rooms = await _userRepository.GetUserSavedRooms(id);
-            return Ok(rooms.Select(r => r.ToRoomDto()));
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
     }
 }

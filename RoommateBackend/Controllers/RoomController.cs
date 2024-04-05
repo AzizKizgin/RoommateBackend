@@ -25,81 +25,123 @@ namespace RoommateBackend.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRoomById(int id)
         {
-            var room = await _roomRepository.GetRoomById(id);
-            if (room == null)
+            try
             {
-                return NotFound();
+                var room = await _roomRepository.GetRoomById(id);
+                if (room == null)
+                {
+                    return NotFound();
+                }
+                return Ok(room.ToRoomDto());
             }
-            return Ok(room.ToRoomDto());
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpGet]
         public async Task<IActionResult> GetRooms([FromQuery] RoomQueryObject queryObject)
         {
-            var rooms = await _roomRepository.GetRooms(queryObject);
-            return Ok(rooms.Select(r => r.ToRoomDto()));
+            try
+            {
+                var rooms = await _roomRepository.GetRooms(queryObject);
+                return Ok(rooms.Select(r => r.ToRoomDto()));
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateRoom([FromBody] CreateRoomDto room)
         {
-            var newRoom = await _roomRepository.CreateRoom(room);
-            if (newRoom == null)
+            try
             {
-                return BadRequest("Room could not be created.");
+                var newRoom = await _roomRepository.CreateRoom(room);
+                if (newRoom == null)
+                {
+                    return BadRequest("Room could not be created.");
+                }
+                return Ok(newRoom.ToRoomDto());
             }
-            return Ok(newRoom.ToRoomDto());
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> DeleteRoom(int id)
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value;
-            if (userId == null)
+            try
             {
-                return BadRequest("User not found.");
+                var userId = User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value;
+                if (userId == null)
+                {
+                    return BadRequest("User not found.");
+                }
+                var deletedRoom = await _roomRepository.DeleteRoom(id, userId);
+                if (deletedRoom == null)
+                {
+                    return BadRequest("Room could not be deleted.");
+                }
+                return Ok(deletedRoom.ToRoomDto());
             }
-            var deletedRoom = await _roomRepository.DeleteRoom(id, userId);
-            if (deletedRoom == null)
+            catch (Exception e)
             {
-                return BadRequest("Room could not be deleted.");
+                return BadRequest(e.Message);
             }
-            return Ok(deletedRoom.ToRoomDto());
         }
 
         [HttpPut("{id}")]
         [Authorize]
         public async Task<IActionResult> UpdateRoom(int id, [FromBody] UpdateRoomDto room)
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value;
-            if (userId == null)
+            try
             {
-                return BadRequest("User not found.");
+                var userId = User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value;
+                if (userId == null)
+                {
+                    return BadRequest("User not found.");
+                }
+                var updatedRoom = await _roomRepository.UpdateRoom(id, userId, room);
+                if (updatedRoom == null)
+                {
+                    return BadRequest("Room could not be updated.");
+                }
+                return Ok(updatedRoom.ToRoomDto());
             }
-            var updatedRoom = await _roomRepository.UpdateRoom(id, userId, room);
-            if (updatedRoom == null)
+            catch (Exception e)
             {
-                return BadRequest("Room could not be updated.");
+                return BadRequest(e.Message);
             }
-            return Ok(updatedRoom.ToRoomDto());
         }
 
         [HttpPost("{id}/favorite")]
         [Authorize]
         public async Task<IActionResult> FavoriteRoom(int id)
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value;
-            if (userId == null)
+            try
             {
-                return BadRequest("User not found.");
+                var userId = User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value;
+                if (userId == null)
+                {
+                    return BadRequest("User not found.");
+                }
+                var favoritedRoom = await _roomRepository.FavoriteRoom(userId, id);
+                if (favoritedRoom == null)
+                {
+                    return BadRequest("Room could not be favorited.");
+                }
+                return Ok(favoritedRoom.ToRoomDto());
             }
-            var favoritedRoom = await _roomRepository.FavoriteRoom(userId, id);
-            if (favoritedRoom == null)
+            catch (Exception e)
             {
-                return BadRequest("Room could not be favorited.");
+                return BadRequest(e.Message);
             }
-            return Ok(favoritedRoom.ToRoomDto());
         }
     }
 }
