@@ -55,6 +55,7 @@ namespace RoommateBackend.Repositories
             {
                 _context.Users.Remove(user);
                 await _context.SaveChangesAsync();
+                await _userManager.DeleteAsync(user);
                 return user;
             }
         }
