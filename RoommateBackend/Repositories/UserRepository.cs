@@ -30,18 +30,31 @@ namespace RoommateBackend.Repositories
 
         public async Task<AppUser?> CreateUser(CreateUserDto user)
         {
+            if (await _userManager.FindByEmailAsync(user.Email) != null)
+            {
+                throw new Exception("Email already exists.");
+            }
             var newUser = user.ToUser();
             var result = await _userManager.CreateAsync(newUser, user.Password);
+            if (result.Errors.Any())
+            {
+                throw new Exception(result.Errors.First().Description);
+            }
             if (result.Succeeded)
             {
                 var userRoleResult = await _userManager.AddToRoleAsync(newUser, "User");
                 if (!userRoleResult.Succeeded)
                 {
                     await _userManager.DeleteAsync(newUser);
-                    return null;
+                    throw new Exception("Failed to add user role.");
                 }
+                return newUser;
             }
-            return newUser;
+            if (result.Errors.Any())
+            {
+                throw new Exception(result.Errors.First().Description);
+            }
+            throw new Exception("Failed to create user.");
         }
 
         public async Task<AppUser?> DeleteUser(string id)

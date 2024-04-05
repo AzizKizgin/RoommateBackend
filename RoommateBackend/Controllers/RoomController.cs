@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RoommateBackend.Dtos.Room;
 using RoommateBackend.Helpers;
 using RoommateBackend.Mappers;
+using RoommateBackend.Models;
 using RoommateBackend.Repositories.Interfaces;
 
 namespace RoommateBackend.Controllers
@@ -16,10 +18,12 @@ namespace RoommateBackend.Controllers
     public class RoomController: ControllerBase
     {
         private readonly IRoomRepository _roomRepository;
+        private readonly UserManager<AppUser> _userManager;
 
-        public RoomController(IRoomRepository roomRepository)
+        public RoomController(IRoomRepository roomRepository, UserManager<AppUser> userManager)
         {
             _roomRepository = roomRepository;
+            _userManager = userManager;
         }
 
         [HttpGet("{id}")]
@@ -55,11 +59,17 @@ namespace RoommateBackend.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateRoom([FromBody] CreateRoomDto room)
         {
             try
             {
-                var newRoom = await _roomRepository.CreateRoom(room);
+                var username = User.Identity.Name;
+                if (username == null)
+                {
+                    return BadRequest("User not found.");
+                }
+                var newRoom = await _roomRepository.CreateRoom(room, username);
                 if (newRoom == null)
                 {
                     return BadRequest("Room could not be created.");
@@ -78,7 +88,12 @@ namespace RoommateBackend.Controllers
         {
             try
             {
-                var userId = User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value;
+                var username = User.Identity.Name;
+                if (username == null)
+                {
+                    return BadRequest("User not found.");
+                }
+                var userId = (await _userManager.FindByNameAsync(username))?.Id;
                 if (userId == null)
                 {
                     return BadRequest("User not found.");
@@ -102,7 +117,12 @@ namespace RoommateBackend.Controllers
         {
             try
             {
-                var userId = User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value;
+                var username = User.Identity.Name;
+                if (username == null)
+                {
+                    return BadRequest("User not found.");
+                }
+                var userId = (await _userManager.FindByNameAsync(username))?.Id;
                 if (userId == null)
                 {
                     return BadRequest("User not found.");
@@ -126,7 +146,12 @@ namespace RoommateBackend.Controllers
         {
             try
             {
-                var userId = User.Claims.FirstOrDefault(c => c.Type == "Id")?.Value;
+                var username = User.Identity.Name;
+                if (username == null)
+                {
+                    return BadRequest("User not found.");
+                }
+                var userId = (await _userManager.FindByNameAsync(username))?.Id;
                 if (userId == null)
                 {
                     return BadRequest("User not found.");
