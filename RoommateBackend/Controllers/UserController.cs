@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using RoommateBackend.Dtos.User;
 using RoommateBackend.Mappers;
+using RoommateBackend.Models;
 using RoommateBackend.Repositories.Interfaces;
 using RoommateBackend.Services.Interfaces;
 
@@ -17,11 +20,13 @@ namespace RoommateBackend.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
+        private readonly UserManager<AppUser> _userManager;
 
-        public UserController(IUserRepository userRepository, ITokenService tokenService)
+        public UserController(IUserRepository userRepository, ITokenService tokenService, UserManager<AppUser> userManager)
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
+            _userManager = userManager;
         }
 
         [HttpGet("{id}")]
@@ -41,11 +46,16 @@ namespace RoommateBackend.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("register")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserDto user)
         {
             try
             {
+                if (ModelState.IsValid == false)
+                {
+                    return BadRequest("Invalid user data.");
+                }
+                
                 var newUser = await _userRepository.CreateUser(user);
                 if (newUser == null)
                 {
@@ -64,6 +74,10 @@ namespace RoommateBackend.Controllers
         {
             try
             {
+                if (ModelState.IsValid == false)
+                {
+                    return BadRequest("Invalid user data.");
+                }
                 var loggedInUser = await _userRepository.LoginUser(user);
                 if (loggedInUser == null)
                 {
@@ -85,7 +99,12 @@ namespace RoommateBackend.Controllers
         {
             try
             {
-                var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+                var username = User.Identity.Name;
+                if (username == null)
+                {
+                    return BadRequest("User could not be logged out.");
+                }
+                var userId = (await _userManager.FindByNameAsync(username))?.Id;
                 if (userId == null)
                 {
                     return BadRequest("User could not be logged out.");
@@ -109,7 +128,12 @@ namespace RoommateBackend.Controllers
         {
             try
             {
-                var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+                var username = User.Identity.Name;
+                if (username == null)
+                {
+                    return BadRequest("User not found.");
+                }
+                var userId = (await _userManager.FindByNameAsync(username))?.Id;
                 if (userId != id)
                 {
                     return Unauthorized("You are not authorized to delete this user.");
@@ -133,7 +157,12 @@ namespace RoommateBackend.Controllers
         {
             try
             {
-                var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+                var username = User.Identity.Name;
+                if (username == null)
+                {
+                    return BadRequest("User not found.");
+                }
+                var userId = (await _userManager.FindByNameAsync(username))?.Id;
                 if (userId != id)
                 {
                     return Unauthorized("You are not authorized to update this user.");
@@ -171,7 +200,12 @@ namespace RoommateBackend.Controllers
         {
             try
             {
-                var userId = User.Claims.FirstOrDefault(c => c.Type == "id")?.Value;
+                var username = User.Identity.Name;
+                if (username == null)
+                {
+                    return BadRequest("User not found.");
+                }
+                var userId = (await _userManager.FindByNameAsync(username))?.Id;
                 if (userId != id)
                 {
                     return Unauthorized("You are not authorized to view this user's saved rooms.");
