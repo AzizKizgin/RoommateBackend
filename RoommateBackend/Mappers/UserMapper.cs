@@ -18,7 +18,7 @@ namespace RoommateBackend.Mappers
                 LastName = createUserDto.LastName,
                 PhoneNumber = createUserDto.PhoneNumber,
                 Job = createUserDto.Job,
-                Age = createUserDto.Age,
+                BirthDate = createUserDto.BirthDate,
                 CreatedAt = DateTime.Now,
                 UserName = createUserDto.Email,
             };
@@ -32,7 +32,7 @@ namespace RoommateBackend.Mappers
                 LastName = updateUserDto.LastName,
                 ProfilePicture = Convert.FromBase64String(updateUserDto.ProfilePicture),
                 About = updateUserDto.About,
-                Age = updateUserDto.Age,
+                BirthDate = updateUserDto.BirthDate,
                 Job = updateUserDto.Job,
             };
         }
@@ -46,7 +46,7 @@ namespace RoommateBackend.Mappers
                 LastName = appUser.LastName,
                 ProfilePicture = appUser.ProfilePicture != null ? Convert.ToBase64String(appUser.ProfilePicture) : string.Empty,
                 About = appUser.About,
-                Age = appUser.Age,
+                BirthDate = appUser.BirthDate,
                 Job = appUser.Job,
                 CreatedAt = appUser.CreatedAt,
             };
@@ -61,7 +61,7 @@ namespace RoommateBackend.Mappers
                 LastName = appUser.LastName,
                 ProfilePicture = appUser.ProfilePicture != null ? Convert.ToBase64String(appUser.ProfilePicture) : string.Empty,
                 About = appUser.About,
-                Age = appUser.Age,
+                BirthDate = appUser.BirthDate,
                 Job = appUser.Job,
                 CreatedAt = appUser.CreatedAt,
                 Rooms = appUser.Rooms.Select(room => room.ToRoomDto()).ToList(),

@@ -15,7 +15,7 @@ namespace RoommateBackend.Models
         public List<Room> SavedRooms { get; set; } = new List<Room>();
         public DateTime CreatedAt { get; set; }
         public string About { get; set; } = string.Empty;
-        public int Age { get; set; }
+        public DateTime BirthDate { get; set; }
         public string Job { get; set; } = string.Empty;
     }
 }

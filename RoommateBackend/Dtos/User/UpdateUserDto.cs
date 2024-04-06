@@ -11,7 +11,7 @@ namespace RoommateBackend.Dtos.User
         public string LastName { get; set; } = string.Empty;
         public string ProfilePicture { get; set; } = string.Empty;
         public string About { get; set; } = string.Empty;
-        public int Age { get; set; }
+        public DateTime BirthDate { get; set; }
         public string Job { get; set; } = string.Empty;
         
     }

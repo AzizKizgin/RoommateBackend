@@ -66,13 +66,13 @@ namespace RoommateBackend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "59ed78c6-626d-4c0e-9b9c-e3d718d2b3e8",
+                            Id = "fa306de4-7963-41ee-99cd-c9889b83e441",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "a54e62a8-6b81-4387-849c-2b67fe5a8614",
+                            Id = "b96c1544-4031-4558-97cf-4634371648ce",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -196,8 +196,8 @@ namespace RoommateBackend.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()

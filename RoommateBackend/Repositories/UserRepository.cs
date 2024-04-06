@@ -92,7 +92,7 @@ namespace RoommateBackend.Repositories
             userToUpdate.LastName = user.LastName;
             userToUpdate.ProfilePicture = Convert.FromBase64String(user.ProfilePicture);
             userToUpdate.About = user.About;
-            userToUpdate.Age = user.Age;
+            userToUpdate.BirthDate = user.BirthDate;
             userToUpdate.Job = user.Job;
             var result = _context.Users.Update(userToUpdate);
             await _context.SaveChangesAsync();

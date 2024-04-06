@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RoommateBackend.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Birthdate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,8 +36,8 @@ namespace RoommateBackend.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ProfilePicture = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Age = table.Column<int>(type: "int", nullable: false),
+                    About = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Job = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -246,8 +246,8 @@ namespace RoommateBackend.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "19af69d5-f0e8-4f3c-a16e-3e4aca6b56b7", null, "Admin", "ADMIN" },
-                    { "3a111938-4835-4bb6-a79f-073af734a37a", null, "User", "USER" }
+                    { "b96c1544-4031-4558-97cf-4634371648ce", null, "User", "USER" },
+                    { "fa306de4-7963-41ee-99cd-c9889b83e441", null, "Admin", "ADMIN" }
                 });
 
             migrationBuilder.CreateIndex(
