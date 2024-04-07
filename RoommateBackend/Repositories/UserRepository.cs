@@ -109,8 +109,12 @@ namespace RoommateBackend.Repositories
                 {
                     return userToLogin;
                 }
+                else
+                {
+                    throw new Exception("Invalid password.");
+                }
             }
-            return null;
+            throw new Exception("User not found with this email.");
         }
         
         public async Task<bool?> LogoutUser(string id)
