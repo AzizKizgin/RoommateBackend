@@ -30,7 +30,7 @@ namespace RoommateBackend.Repositories
 
         public async Task<AppUser?> CreateUser(CreateUserDto user)
         {
-            if (await _userManager.FindByEmailAsync(user.Email) != null)
+            if ((await _userManager.FindByEmailAsync(user.Email)) != null)
             {
                 throw new Exception("Email already exists.");
             }
