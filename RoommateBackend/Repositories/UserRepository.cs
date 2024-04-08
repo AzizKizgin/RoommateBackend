@@ -148,5 +148,20 @@ namespace RoommateBackend.Repositories
                             .Where(r => r.SavedBy.Any(u => u.Id == userId));
             return await rooms.ToListAsync();
         }
+
+        public async Task<AppUser?> ChangePassword(string id, ChangePasswordDto password)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return null;
+            }
+            var result = await _userManager.ChangePasswordAsync(user, password.OldPassword, password.NewPassword);
+            if (result.Succeeded)
+            {
+                return user;
+            }
+            return null;
+        }
     }
 }

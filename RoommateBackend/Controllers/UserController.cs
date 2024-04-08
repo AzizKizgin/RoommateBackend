@@ -212,5 +212,38 @@ namespace RoommateBackend.Controllers
                 return BadRequest(e.Message);
             }
         }
+
+        [Authorize]
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)
+        {
+            try
+            {
+                if (ModelState.IsValid == false)
+                {
+                    return BadRequest("Invalid password data.");
+                }
+                var username = User.Identity.Name;
+                if (username == null)
+                {
+                    return BadRequest("User not found.");
+                }
+                var userId = (await _userManager.FindByNameAsync(username))?.Id;
+                if (userId == null)
+                {
+                    return BadRequest("User not found.");
+                }
+                var result = await _userRepository.ChangePassword(userId, changePasswordDto);
+                if (result == null)
+                {
+                    return BadRequest("Password could not be changed.");
+                }
+                return Ok(result.ToUserDto());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
     }
 }

@@ -18,5 +18,6 @@ namespace RoommateBackend.Repositories.Interfaces
         Task<bool?> LogoutUser();
         Task<IEnumerable<Room>> GetRoomByUserId(string userId);
         Task<IEnumerable<Room>> GetUserSavedRooms(string userId);
+        Task<AppUser?> ChangePassword(string id, ChangePasswordDto password);
     }
 }
