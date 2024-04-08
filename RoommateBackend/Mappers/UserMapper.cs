@@ -34,6 +34,7 @@ namespace RoommateBackend.Mappers
                 About = updateUserDto.About,
                 BirthDate = updateUserDto.BirthDate,
                 Job = updateUserDto.Job,
+                PhoneNumber = updateUserDto.PhoneNumber,
             };
         }
 

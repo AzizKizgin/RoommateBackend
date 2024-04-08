@@ -94,6 +94,7 @@ namespace RoommateBackend.Repositories
             userToUpdate.About = user.About;
             userToUpdate.BirthDate = user.BirthDate;
             userToUpdate.Job = user.Job;
+            userToUpdate.PhoneNumber = user.PhoneNumber;
             var result = _context.Users.Update(userToUpdate);
             await _context.SaveChangesAsync();
             return result.Entity;
