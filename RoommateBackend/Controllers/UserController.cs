@@ -99,17 +99,7 @@ namespace RoommateBackend.Controllers
         {
             try
             {
-                var username = User.Identity.Name;
-                if (username == null)
-                {
-                    return BadRequest("User could not be logged out.");
-                }
-                var userId = (await _userManager.FindByNameAsync(username))?.Id;
-                if (userId == null)
-                {
-                    return BadRequest("User could not be logged out.");
-                }
-                var result = await _userRepository.LogoutUser(userId);
+                var result = await _userRepository.LogoutUser();
                 if (result == false)
                 {
                     return BadRequest("User could not be logged out.");

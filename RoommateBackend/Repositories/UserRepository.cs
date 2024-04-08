@@ -117,7 +117,7 @@ namespace RoommateBackend.Repositories
             throw new Exception("User not found with this email.");
         }
         
-        public async Task<bool?> LogoutUser(string id)
+        public async Task<bool?> LogoutUser()
         {
             try
             {
