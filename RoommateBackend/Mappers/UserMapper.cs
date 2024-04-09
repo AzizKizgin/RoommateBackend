@@ -38,9 +38,9 @@ namespace RoommateBackend.Mappers
             };
         }
 
-        public static RoomOwnerDto ToRoomOwnerDto(this AppUser appUser)
+        public static RoomUserDto ToRoomOwnerDto(this AppUser appUser)
         {
-            return new RoomOwnerDto
+            return new RoomUserDto
             {
                 Id = appUser.Id,
                 FirstName = appUser.FirstName,

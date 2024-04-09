@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace RoommateBackend.Dtos.User
 {
-    public class RoomOwnerDto
+    public class RoomUserDto
     {
         public string Id { get; set; }
         public string FirstName { get; set; }

@@ -18,8 +18,8 @@ namespace RoommateBackend.Dtos.Room
         public string Description { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
-        public RoomOwnerDto Owner { get; set; }
-        public int SavedByCount { get; set; }
+        public RoomUserDto Owner { get; set; }
+        public List<RoomUserDto> SavedBy { get; set; } = new List<RoomUserDto>();
         public RoomAddressDto Address { get; set; }
     }
 }

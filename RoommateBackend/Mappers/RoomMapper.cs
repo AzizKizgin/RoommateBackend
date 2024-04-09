@@ -60,7 +60,9 @@ namespace RoommateBackend.Mappers
                 CreatedAt = room.CreatedAt,
                 UpdatedAt = room.UpdatedAt,
                 Owner = room.Owner.ToRoomOwnerDto(),
-                SavedByCount = room.SavedBy.Count,
+                SavedBy = room.SavedBy.Select(
+                    user => user.ToRoomOwnerDto()
+                ).ToList(),
                 Address = room.Address.ToRoomAddressDto(),
             };
         }
