@@ -47,7 +47,7 @@ namespace RoommateBackend.Mappers
                 LastName = appUser.LastName,
                 ProfilePicture = appUser.ProfilePicture != null ? Convert.ToBase64String(appUser.ProfilePicture) : string.Empty,
                 About = appUser.About,
-                BirthDate = appUser.BirthDate,
+                BirthDate = appUser.BirthDate.ToString("dd-MM-yyyy").Replace('-' , '.' ),
                 Job = appUser.Job,
                 CreatedAt = appUser.CreatedAt,
             };
