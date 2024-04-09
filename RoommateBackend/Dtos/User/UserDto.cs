@@ -16,7 +16,7 @@ namespace RoommateBackend.Dtos.User
         public List<RoomDto> SavedRooms { get; set; } = new List<RoomDto>();
         public DateTime CreatedAt { get; set; }
         public string About { get; set; } = string.Empty;
-        public DateTime BirthDate { get; set; }
+        public string BirthDate { get; set; } = string.Empty;
         public string Job { get; set; } = string.Empty;
         public string PhoneNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
