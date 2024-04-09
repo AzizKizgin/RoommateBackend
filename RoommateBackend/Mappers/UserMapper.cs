@@ -30,7 +30,7 @@ namespace RoommateBackend.Mappers
             {
                 FirstName = updateUserDto.FirstName,
                 LastName = updateUserDto.LastName,
-                ProfilePicture = Convert.FromBase64String(updateUserDto.ProfilePicture),
+                ProfilePicture = updateUserDto.ProfilePicture == string.Empty ? null : Convert.FromBase64String(updateUserDto.ProfilePicture),
                 About = updateUserDto.About,
                 BirthDate = updateUserDto.BirthDate,
                 Job = updateUserDto.Job,

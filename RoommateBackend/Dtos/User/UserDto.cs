@@ -11,7 +11,7 @@ namespace RoommateBackend.Dtos.User
         public string Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; } 
-        public string? ProfilePicture { get; set; }
+        public string ProfilePicture { get; set; } = string.Empty;
         public List<RoomDto> Rooms { get; set; } = new List<RoomDto>();
         public List<RoomDto> SavedRooms { get; set; } = new List<RoomDto>();
         public DateTime CreatedAt { get; set; }

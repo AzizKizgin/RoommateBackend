@@ -90,7 +90,7 @@ namespace RoommateBackend.Repositories
             }
             userToUpdate.FirstName = user.FirstName;
             userToUpdate.LastName = user.LastName;
-            userToUpdate.ProfilePicture = Convert.FromBase64String(user.ProfilePicture);
+            userToUpdate.ProfilePicture = user.ProfilePicture == string.Empty  ? null : Convert.FromBase64String(user.ProfilePicture);
             userToUpdate.About = user.About;
             userToUpdate.BirthDate = user.BirthDate;
             userToUpdate.Job = user.Job;
