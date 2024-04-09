@@ -12,7 +12,7 @@ namespace RoommateBackend.Dtos.Room
         public int RoomCount { get; set; }
         public int BathCount { get; set; }
         public double Size { get; set; }
-        public string Description { get; set; } = string.Empty;
+        public string About { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public RoomAddressDto Address { get; set; }
         public List<string> Images { get; set; } = new List<string>();

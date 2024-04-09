@@ -207,7 +207,7 @@ namespace RoommateBackend.Repositories
             existingRoom.BathCount = room.BathCount;
             existingRoom.Images = room.Images.Select(i => Convert.FromBase64String(i)).ToList();
             existingRoom.Size = room.Size;
-            existingRoom.Description = room.Description;
+            existingRoom.About = room.About;
             existingRoom.UpdatedAt = room.UpdatedAt;
             existingRoom.Address.UpdateRoomAddress(room.Address);
             var result = _context.Rooms.Update(existingRoom);

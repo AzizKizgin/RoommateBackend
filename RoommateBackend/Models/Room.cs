@@ -14,7 +14,7 @@ namespace RoommateBackend.Models
         public int BathCount { get; set; }
         public List<byte[]> Images { get; set; }
         public double Size { get; set; }
-        public string Description { get; set; } = string.Empty;
+        public string About { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public AppUser Owner { get; set; }
