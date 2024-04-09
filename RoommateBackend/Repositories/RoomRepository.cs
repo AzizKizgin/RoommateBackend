@@ -61,19 +61,20 @@ namespace RoommateBackend.Repositories
             {
                 return null;
             }
-            var room = await _context.Rooms.FindAsync(roomId);
+            var room = await _context.Rooms
+                            .Include(r => r.SavedBy)
+                            .Include(r => r.Owner)
+                            .FirstOrDefaultAsync(r => r.Id == roomId);
             if (room == null)
             {
                 return null;
             }
-            if (user.SavedRooms.Contains(room))
+            if (room.SavedBy.Contains(user) || room.OwnerId == userId)
             {
-                user.SavedRooms.Remove(room);
+                return null;
             }
-            else
-            {
-                user.SavedRooms.Add(room);
-            }
+            room.SavedBy.Add(user);
+            user.SavedRooms.Add(room);
             await _context.SaveChangesAsync();
             await _userManager.UpdateAsync(user);
             return room;
@@ -84,6 +85,8 @@ namespace RoommateBackend.Repositories
             var room = await _context.Rooms
                             .Include(r => r.Owner)
                             .Include(r => r.Address)
+                            .Include(r => r.SavedBy)
+                            .Include(r => r.Images)
                             .FirstOrDefaultAsync(r => r.Id == id);
             return room;
         }
@@ -93,6 +96,8 @@ namespace RoommateBackend.Repositories
             var rooms = _context.Rooms
                             .Include(r => r.Owner)
                             .Include(r => r.Address)
+                            .Include(r => r.SavedBy)
+                            .Include(r => r.Images)
                             .AsQueryable();
             if (queryObject.MinPrice.HasValue)
             {

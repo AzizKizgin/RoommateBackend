@@ -136,6 +136,8 @@ namespace RoommateBackend.Repositories
             var room = await _context.Rooms
                             .Include(r => r.Owner)
                             .Include(r => r.Address)
+                            .Include(r => r.SavedBy)
+                            .Include(r => r.Images)
                             .Where(r => r.OwnerId == userId)
                             .ToListAsync();
             return room;
@@ -146,6 +148,8 @@ namespace RoommateBackend.Repositories
             var rooms = _context.Rooms
                             .Include(r => r.Owner)
                             .Include(r => r.Address)
+                            .Include(r => r.SavedBy)
+                            .Include(r => r.Images)
                             .Where(r => r.SavedBy.Any(u => u.Id == userId));
             return await rooms.ToListAsync();
         }
