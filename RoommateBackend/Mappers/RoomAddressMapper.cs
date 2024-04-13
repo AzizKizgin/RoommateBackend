@@ -15,7 +15,8 @@ namespace RoommateBackend.Mappers
             {
                 Street = roomAddressDto.Street,
                 City = roomAddressDto.City,
-                State = roomAddressDto.State,
+                Town = roomAddressDto.Town,
+                Country = roomAddressDto.Country,
                 ZipCode = roomAddressDto.ZipCode,
                 Latitude = roomAddressDto.Latitude,
                 Longitude = roomAddressDto.Longitude
@@ -28,7 +29,8 @@ namespace RoommateBackend.Mappers
             {
                 Street = roomAddress.Street,
                 City = roomAddress.City,
-                State = roomAddress.State,
+                Town = roomAddress.Town,
+                Country = roomAddress.Country,
                 ZipCode = roomAddress.ZipCode,
                 Latitude = roomAddress.Latitude,
                 Longitude = roomAddress.Longitude
@@ -39,7 +41,8 @@ namespace RoommateBackend.Mappers
         {
             roomAddress.Street = roomAddressDto.Street;
             roomAddress.City = roomAddressDto.City;
-            roomAddress.State = roomAddressDto.State;
+            roomAddress.Town = roomAddressDto.Town;
+            roomAddress.Country = roomAddressDto.Country;
             roomAddress.ZipCode = roomAddressDto.ZipCode;
             roomAddress.Latitude = roomAddressDto.Latitude;
             roomAddress.Longitude = roomAddressDto.Longitude;

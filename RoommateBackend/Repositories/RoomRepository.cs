@@ -135,9 +135,13 @@ namespace RoommateBackend.Repositories
             {
                 rooms = rooms.Where(r => r.Address.City == queryObject.City);
             }
-            if (queryObject.State != null)
+            if (queryObject.Town != null)
             {
-                rooms = rooms.Where(r => r.Address.State == queryObject.State);
+                rooms = rooms.Where(r => r.Address.Town == queryObject.Town);
+            }
+            if (queryObject.Country != null)
+            {
+                rooms = rooms.Where(r => r.Address.Country == queryObject.Country);
             }
             if (queryObject.Street != null)
             {

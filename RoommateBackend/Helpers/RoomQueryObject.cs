@@ -19,7 +19,8 @@ namespace RoommateBackend.Helpers
         public int PageSize { get; set; } = 15;
         public string? Street { get; set; }
         public string? City { get; set; }
-        public string? State { get; set; }
+        public string? Town { get; set; } = string.Empty;
+        public string? Country { get; set; } = string.Empty;
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
         public double? Distance { get; set; }
