@@ -17,6 +17,8 @@ namespace RoommateBackend.Mappers
                 City = roomAddressDto.City,
                 Town = roomAddressDto.Town,
                 Country = roomAddressDto.Country,
+                ApartmentNo = roomAddressDto.ApartmentNo,
+                BuildingNo = roomAddressDto.BuildingNo,
                 ZipCode = roomAddressDto.ZipCode,
                 Latitude = roomAddressDto.Latitude,
                 Longitude = roomAddressDto.Longitude
@@ -33,7 +35,9 @@ namespace RoommateBackend.Mappers
                 Country = roomAddress.Country,
                 ZipCode = roomAddress.ZipCode,
                 Latitude = roomAddress.Latitude,
-                Longitude = roomAddress.Longitude
+                Longitude = roomAddress.Longitude,
+                BuildingNo = roomAddress.BuildingNo,
+                ApartmentNo = roomAddress.ApartmentNo
             };
         }
 
@@ -46,6 +50,8 @@ namespace RoommateBackend.Mappers
             roomAddress.ZipCode = roomAddressDto.ZipCode;
             roomAddress.Latitude = roomAddressDto.Latitude;
             roomAddress.Longitude = roomAddressDto.Longitude;
+            roomAddress.BuildingNo = roomAddressDto.BuildingNo;
+            roomAddress.ApartmentNo = roomAddressDto.ApartmentNo;
             return roomAddress;
         }
     }
