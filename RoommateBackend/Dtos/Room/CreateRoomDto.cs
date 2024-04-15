@@ -8,10 +8,10 @@ namespace RoommateBackend.Dtos.Room
 {
     public class CreateRoomDto
     {
-        public double Price { get; set; }
-        public int RoomCount { get; set; }
-        public int BathCount { get; set; }
-        public double Size { get; set; }
+        public string Price { get; set; }
+        public string RoomCount { get; set; }
+        public string BathCount { get; set; }
+        public string Size { get; set; }
         public string About { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public RoomAddressDto Address { get; set; }

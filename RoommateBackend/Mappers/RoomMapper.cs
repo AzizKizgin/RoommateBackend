@@ -13,10 +13,10 @@ namespace RoommateBackend.Mappers
         {
             return new Room
             {
-                Price = createRoomDto.Price,
-                RoomCount = createRoomDto.RoomCount,
-                BathCount = createRoomDto.BathCount,
-                Size = createRoomDto.Size,
+                Price = Convert.ToDouble(createRoomDto.Price),
+                RoomCount = Convert.ToInt32(createRoomDto.RoomCount),
+                BathCount = Convert.ToInt32(createRoomDto.BathCount),
+                Size = Convert.ToDouble(createRoomDto.Size),
                 About = createRoomDto.About,
                 CreatedAt = createRoomDto.CreatedAt,
                 Address = createRoomDto.Address.ToRoomAddress(),
@@ -31,10 +31,10 @@ namespace RoommateBackend.Mappers
         {
             return new Room
             {
-                Price = updateRoomDto.Price,
-                RoomCount = updateRoomDto.RoomCount,
-                BathCount = updateRoomDto.BathCount,
-                Size = updateRoomDto.Size,
+                Price = Convert.ToDouble(updateRoomDto.Price),
+                RoomCount = Convert.ToInt32(updateRoomDto.RoomCount),
+                BathCount = Convert.ToInt32(updateRoomDto.BathCount),
+                Size = Convert.ToDouble(updateRoomDto.Size),
                 About = updateRoomDto.About,
                 UpdatedAt = updateRoomDto.UpdatedAt,
                 Address = updateRoomDto.Address.ToRoomAddress(),
