@@ -206,11 +206,11 @@ namespace RoommateBackend.Repositories
             {
                 return null;
             }
-            existingRoom.Price = room.Price;
-            existingRoom.RoomCount = room.RoomCount;
-            existingRoom.BathCount = room.BathCount;
+            existingRoom.Price = Convert.ToDouble(room.Price);
+            existingRoom.RoomCount = Convert.ToInt32(room.RoomCount);
+            existingRoom.BathCount = Convert.ToInt32(room.BathCount);
             existingRoom.Images = room.Images.Select(i => Convert.FromBase64String(i)).ToList();
-            existingRoom.Size = room.Size;
+            existingRoom.Size = Convert.ToDouble(room.Size);
             existingRoom.About = room.About;
             existingRoom.UpdatedAt = room.UpdatedAt;
             existingRoom.Address.UpdateRoomAddress(room.Address);
