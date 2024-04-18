@@ -118,7 +118,7 @@ namespace RoommateBackend.Controllers
         {
             try
             {
-                var username = User.Identity.Name;
+                var username = User.Identity?.Name;
                 if (username == null)
                 {
                     return BadRequest("User not found.");
@@ -151,7 +151,7 @@ namespace RoommateBackend.Controllers
                 {
                     return BadRequest("Invalid user data.");
                 }
-                var username = User.Identity.Name;
+                var username = User.Identity?.Name;
                 if (username == null)
                 {
                     return BadRequest("User not found.");
@@ -194,7 +194,7 @@ namespace RoommateBackend.Controllers
         {
             try
             {
-                var username = User.Identity.Name;
+                var username = User.Identity?.Name;
                 if (username == null)
                 {
                     return BadRequest("User not found.");
@@ -223,7 +223,7 @@ namespace RoommateBackend.Controllers
                 {
                     return BadRequest("Invalid password data.");
                 }
-                var username = User.Identity.Name;
+                var username = User.Identity?.Name;
                 if (username == null)
                 {
                     return BadRequest("User not found.");
