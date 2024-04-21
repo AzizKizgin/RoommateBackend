@@ -11,7 +11,7 @@ namespace RoommateBackend.Repositories.Interfaces
     public interface IRoomRepository
     {
         Task<Room?> GetRoomById(int id);
-        Task<IEnumerable<Room>> GetRooms(RoomQueryObject queryObject);
+        Task<RoomsResponse> GetRooms(RoomQueryObject queryObject);
         Task<Room?> FavoriteRoom(string userId, int roomId);
         Task<Room?> CreateRoom(CreateRoomDto room, string username);
         Task<Room?> UpdateRoom(int id, string userId, UpdateRoomDto room);

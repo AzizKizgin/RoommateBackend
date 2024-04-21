@@ -86,19 +86,18 @@ namespace RoommateBackend.Repositories
                             .Include(r => r.Owner)
                             .Include(r => r.Address)
                             .Include(r => r.SavedBy)
-                            .Include(r => r.Images)
                             .FirstOrDefaultAsync(r => r.Id == id);
             return room;
         }
 
-        public async Task<IEnumerable<Room>> GetRooms(RoomQueryObject queryObject)
+        public async Task<RoomsResponse> GetRooms(RoomQueryObject queryObject)
         {
             var rooms = _context.Rooms
                             .Include(r => r.Owner)
                             .Include(r => r.Address)
                             .Include(r => r.SavedBy)
-                            .Include(r => r.Images)
                             .AsQueryable();
+  
             if (queryObject.MinPrice.HasValue)
             {
                 rooms = rooms.Where(r => r.Price >= queryObject.MinPrice);
@@ -107,21 +106,13 @@ namespace RoommateBackend.Repositories
             {
                 rooms = rooms.Where(r => r.Price <= queryObject.MaxPrice);
             }
-            if (queryObject.MinRoomCount.HasValue)
+            if (queryObject.RoomCounts != null)
             {
-                rooms = rooms.Where(r => r.RoomCount >= queryObject.MinRoomCount);
+                rooms = rooms.Where(r => queryObject.RoomCounts.Contains(r.RoomCount));
             }
-            if (queryObject.MaxRoomCount.HasValue)
+            if (queryObject.BathCounts != null)
             {
-                rooms = rooms.Where(r => r.RoomCount <= queryObject.MaxRoomCount);
-            }
-            if (queryObject.MinBathCount.HasValue)
-            {
-                rooms = rooms.Where(r => r.BathCount >= queryObject.MinBathCount);
-            }
-            if (queryObject.MaxBathCount.HasValue)
-            {
-                rooms = rooms.Where(r => r.BathCount <= queryObject.MaxBathCount);
+                rooms = rooms.Where(r => queryObject.BathCounts.Contains(r.BathCount));
             }
             if (queryObject.MinSize.HasValue)
             {
@@ -147,7 +138,7 @@ namespace RoommateBackend.Repositories
             {
                 rooms = rooms.Where(r => r.Address.Street == queryObject.Street);
             }
-            if (queryObject.SortBy != null)
+            if (queryObject.SortBy != null && queryObject.SortDirection != null)
             {
                 rooms = queryObject.SortDirection switch
                 {
@@ -189,10 +180,16 @@ namespace RoommateBackend.Repositories
                 double minLon = (double)(queryObject.Longitude - (queryObject.Distance / (111.0 * Math.Cos((double)(queryObject.Latitude * Math.PI / 180.0)))));
                 rooms = rooms.Where(r => r.Address.Latitude <= maxLat && r.Address.Latitude >= minLat && r.Address.Longitude <= maxLon && r.Address.Longitude >= minLon);
             }
-            return await rooms
-                        .Skip((queryObject.Page - 1) * queryObject.PageSize)
-                        .Take(queryObject.PageSize)
-                        .ToListAsync();
+            rooms = rooms.Skip((queryObject.Page - 1) * queryObject.PageSize).Take(queryObject.PageSize);
+            
+            return new RoomsResponse
+            {
+                Rooms = rooms.Select(r => r.ToRoomDto()).ToList(),
+                TotalCount = 1,
+                Page = queryObject.Page,
+                PageSize = queryObject.PageSize
+            };
+
         }
 
         public async Task<Room?> UpdateRoom(int id, string userId, UpdateRoomDto room)
