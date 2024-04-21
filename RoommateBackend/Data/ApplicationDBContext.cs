@@ -31,25 +31,36 @@ namespace RoommateBackend.Data
             };
             modelBuilder.Entity<IdentityRole>().HasData(roles);
 
-            // AppUser and Room (many-to-one as owner)
             modelBuilder.Entity<Room>()
                 .HasOne(r => r.Owner)
                 .WithMany(u => u.Rooms)
                 .HasForeignKey(r => r.OwnerId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.Restrict); // Or set to Cascade if you want user deletion to cascade to rooms
 
-            // AppUser and Room (many-to-many as saved rooms)
-            modelBuilder.Entity<AppUser>()
-                .HasMany(u => u.SavedRooms)
-                .WithMany(r => r.SavedBy)
-                .UsingEntity(j => j.ToTable("SavedRooms"));
-
-            // Room and RoomAddress (one-to-one)
             modelBuilder.Entity<Room>()
                 .HasOne(r => r.Address)
                 .WithOne(a => a.Room)
-                .HasForeignKey<RoomAddress>(a => a.RoomId)
-                .OnDelete(DeleteBehavior.Cascade); 
+                .HasForeignKey<RoomAddress>(a => a.RoomId);
+
+            modelBuilder.Entity<AppUser>()
+                .HasMany(u => u.Rooms)
+                .WithOne(r => r.Owner)
+                .HasForeignKey(r => r.OwnerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AppUser>()
+                .HasMany(u => u.SavedRooms)
+                .WithMany(r => r.SavedBy)
+                .UsingEntity<Dictionary<string, object>>(
+                    "UserSavedRooms",
+                    ur => ur.HasOne<Room>().WithMany().HasForeignKey("RoomId").OnDelete(DeleteBehavior.Cascade),
+                    ur => ur.HasOne<AppUser>().WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.Cascade),
+                    ur =>
+                    {
+                        ur.Property<int>("SavedOn");
+                        ur.HasKey("UserId", "RoomId");
+                    });
+
         }
     }
 }
