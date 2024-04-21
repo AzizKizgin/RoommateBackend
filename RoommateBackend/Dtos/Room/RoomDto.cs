@@ -22,4 +22,12 @@ namespace RoommateBackend.Dtos.Room
         public List<RoomUserDto> SavedBy { get; set; } = new List<RoomUserDto>();
         public RoomAddressDto Address { get; set; }
     }
+
+    public class RoomsResponse
+    {
+        public List<RoomDto> Rooms { get; set; } = new List<RoomDto>();
+        public int TotalCount { get; set; }
+        public int Page { get; set; }
+        public int PageSize { get; set; }
+    }
 }
