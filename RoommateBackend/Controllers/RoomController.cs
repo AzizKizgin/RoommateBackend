@@ -49,8 +49,8 @@ namespace RoommateBackend.Controllers
         {
             try
             {
-                var rooms = await _roomRepository.GetRooms(queryObject);
-                return Ok(rooms.Select(r => r.ToRoomDto()));
+                var roomsResponse = await _roomRepository.GetRooms(queryObject);
+                return Ok(roomsResponse);
             }
             catch (Exception e)
             {
