@@ -7,12 +7,10 @@ namespace RoommateBackend.Helpers
 {
     public class RoomQueryObject
     {
-        public int? MinPrice { get; set; }
-        public int? MaxPrice { get; set; }
-        public int? MinRoomCount { get; set; }
-        public int? MaxRoomCount { get; set; }
-        public int? MinBathCount { get; set; }
-        public int? MaxBathCount { get; set; }
+        public double? MinPrice { get; set; }
+        public double? MaxPrice { get; set; }
+        public int[]? RoomCounts { get; set; }
+        public int[]? BathCounts { get; set; }
         public double? MinSize { get; set; }
         public double? MaxSize { get; set; }
         public int Page { get; set; } = 1;
@@ -25,7 +23,7 @@ namespace RoommateBackend.Helpers
         public double? Longitude { get; set; }
         public double? Distance { get; set; }
         public SortByProperty? SortBy { get; set; }
-        public SortDirection SortDirection { get; set; } = SortDirection.Asc;
+        public SortDirection? SortDirection { get; set; }
         public DateRange? DateRange { get; set; }
     }
 
