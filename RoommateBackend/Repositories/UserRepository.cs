@@ -118,28 +118,28 @@ namespace RoommateBackend.Repositories
             throw new Exception("User not found with this email.");
         }
         
-        public async Task<bool?> LogoutUser()
+        public async Task LogoutUser()
         {
             try
             {
                 await _signInManager.SignOutAsync();
-                return true;
             }
             catch (Exception)
             {
-                return false;
+                throw new Exception("User could not be logged out.");
             }
         }
 
-        public async Task<IEnumerable<Room>> GetRoomByUserId(string userId)
+        public async Task<Room?> GetRoomByUserId(string userId)
         {
-            var room = await _context.Rooms
+            var room = _context.Rooms
                             .Include(r => r.Owner)
                             .Include(r => r.Address)
-                            .Include(r => r.SavedBy)
-                            .Include(r => r.Images)
-                            .Where(r => r.OwnerId == userId)
-                            .ToListAsync();
+                            .FirstOrDefault(r => r.OwnerId == userId);
+            if (room == null)
+            {
+                return null;
+            }
             return room;
         }
 
@@ -149,7 +149,6 @@ namespace RoommateBackend.Repositories
                             .Include(r => r.Owner)
                             .Include(r => r.Address)
                             .Include(r => r.SavedBy)
-                            .Include(r => r.Images)
                             .Where(r => r.SavedBy.Any(u => u.Id == userId));
             return await rooms.ToListAsync();
         }
