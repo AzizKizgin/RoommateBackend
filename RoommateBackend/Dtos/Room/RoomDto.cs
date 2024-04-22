@@ -26,7 +26,7 @@ namespace RoommateBackend.Dtos.Room
     public class RoomsResponse
     {
         public List<RoomDto> Rooms { get; set; } = new List<RoomDto>();
-        public int TotalCount { get; set; }
+        public int TotalPage { get; set; }
         public int Page { get; set; }
         public int PageSize { get; set; }
     }
