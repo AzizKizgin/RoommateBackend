@@ -30,6 +30,11 @@ namespace RoommateBackend.Repositories
             {
                 throw new Exception("User not found.");
             }
+            var hasUserRoom = await _context.Rooms.AnyAsync(r => r.OwnerId == user.Id);
+            if (hasUserRoom)
+            {
+                throw new Exception("You already have a room.");
+            }
             var newRoom = room.ToRoomFromCreateRoomDto();
             newRoom.Owner = user;
             newRoom.OwnerId = user.Id;
