@@ -45,7 +45,10 @@ namespace RoommateBackend.Repositories
 
         public async Task<Room?> DeleteRoom(int id, string userId)
         {
-            var room = await _context.Rooms.FindAsync(id);
+            var room =  _context.Rooms
+                            .Include(r => r.Owner)
+                            .Include(r => r.Address)
+                            .FirstOrDefault(r => r.Id == id);
             if (room == null)
             {
                 throw new Exception("Room not found.");
