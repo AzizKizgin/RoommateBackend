@@ -12,7 +12,7 @@ using RoommateBackend.Data;
 namespace RoommateBackend.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20240421001126_dbContextUpdate")]
+    [Migration("20240422013808_dbContextUpdate")]
     partial class dbContextUpdate
     {
         /// <inheritdoc />
@@ -24,6 +24,21 @@ namespace RoommateBackend.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("AppUserRoom", b =>
+                {
+                    b.Property<string>("SavedById")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("SavedRoomsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SavedById", "SavedRoomsId");
+
+                    b.HasIndex("SavedRoomsId");
+
+                    b.ToTable("SavedRooms", (string)null);
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -54,13 +69,13 @@ namespace RoommateBackend.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "1d46f8fd-c27e-4eeb-bbbe-f2555274ec0b",
+                            Id = "978f6136-d447-4737-b0ff-0662322ba6b2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "060199b4-f9a3-4132-a40d-0dee0d401507",
+                            Id = "4469256d-09b6-415d-b665-05d20bb1be29",
                             Name = "User",
                             NormalizedName = "USER"
                         });
@@ -363,22 +378,19 @@ namespace RoommateBackend.Migrations
                     b.ToTable("RoomAddresses");
                 });
 
-            modelBuilder.Entity("UserSavedRooms", b =>
+            modelBuilder.Entity("AppUserRoom", b =>
                 {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.HasOne("RoommateBackend.Models.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("SavedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<int>("RoomId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SavedOn")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "RoomId");
-
-                    b.HasIndex("RoomId");
-
-                    b.ToTable("UserSavedRooms");
+                    b.HasOne("RoommateBackend.Models.Room", null)
+                        .WithMany()
+                        .HasForeignKey("SavedRoomsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -437,7 +449,7 @@ namespace RoommateBackend.Migrations
                     b.HasOne("RoommateBackend.Models.AppUser", "Owner")
                         .WithMany("Rooms")
                         .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Owner");
@@ -452,21 +464,6 @@ namespace RoommateBackend.Migrations
                         .IsRequired();
 
                     b.Navigation("Room");
-                });
-
-            modelBuilder.Entity("UserSavedRooms", b =>
-                {
-                    b.HasOne("RoommateBackend.Models.Room", null)
-                        .WithMany()
-                        .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RoommateBackend.Models.AppUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("RoommateBackend.Models.AppUser", b =>

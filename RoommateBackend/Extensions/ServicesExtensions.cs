@@ -21,8 +21,10 @@ namespace RoommateBackend.Extensions
     {
         public static void ConfigureSqlContext(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<ApplicationDBContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("sqlConnection")));
+            services.AddDbContext<ApplicationDBContext>(
+                options => options.UseSqlServer(
+                    configuration.GetConnectionString("sqlConnection"), 
+                    a => a.CommandTimeout(180)));
         }
 
         public static void ConfigureIdentity(this IServiceCollection services, IConfiguration configuration)
