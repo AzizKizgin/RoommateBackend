@@ -97,14 +97,20 @@ namespace RoommateBackend.Controllers
         [Authorize]
         public async Task<IActionResult> LogoutUser()
         {
+            var username = User.Identity?.Name;
+            if (username == null)
+            {
+                return BadRequest("User not found.");
+            }
+            var user = await _userManager.FindByNameAsync(username);
+            if (user == null)
+            {
+                return BadRequest("User not found.");
+            }
             try
             {
-                var result = await _userRepository.LogoutUser();
-                if (result == false)
-                {
-                    return BadRequest("User could not be logged out.");
-                }
-                return Ok();
+                await _userRepository.LogoutUser();
+                return Ok(user.ToUserDto());
             }
             catch (Exception e)
             {
@@ -180,7 +186,11 @@ namespace RoommateBackend.Controllers
             try
             {
                 var rooms = await _userRepository.GetRoomByUserId(id);
-                return Ok(rooms.Select(r => r.ToRoomDto()));
+                if (rooms == null)
+                {
+                    return BadRequest("Rooms not found.");
+                }
+                return Ok(rooms.ToRoomDto());
             }
             catch (Exception e)
             {
