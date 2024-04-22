@@ -48,11 +48,11 @@ namespace RoommateBackend.Repositories
             var room = await _context.Rooms.FindAsync(id);
             if (room == null)
             {
-                return null;
+                throw new Exception("Room not found.");
             }
             if (room.OwnerId != userId)
             {
-                return null;
+                throw new Exception("You are not the owner of this room.");
             }
             _context.Rooms.Remove(room);
             await _context.SaveChangesAsync();
@@ -60,49 +60,60 @@ namespace RoommateBackend.Repositories
         }
 
         public async Task<Room?> FavoriteRoom(string userId, int roomId)
-        {
+        { 
             var user = await _context.Users.FindAsync(userId);
             if (user == null)
             {
-                return null;
+                throw new Exception("User not found.");
             }
-            var room = await _context.Rooms
-                            .Include(r => r.SavedBy)
-                            .Include(r => r.Owner)
-                            .FirstOrDefaultAsync(r => r.Id == roomId);
-            if (room == null)
+            
+            var room = _context.Rooms
+                            .Include(r => r.Owner)             
+                            .Include(r => r.Address)  
+                            .Include(r => r.SavedBy)          
+                            .FirstOrDefault(r => r.Id == roomId);
+                            
+          if (room == null)
             {
-                return null;
+                throw new Exception("Room not found.");
             }
             if (room.SavedBy.Contains(user) || room.OwnerId == userId)
             {
-                return null;
+                room.SavedBy.Remove(user);
+                user.SavedRooms.Remove(room);
+                await _context.SaveChangesAsync();
+                await _userManager.UpdateAsync(user);
+                return room;
             }
             room.SavedBy.Add(user);
             user.SavedRooms.Add(room);
             await _context.SaveChangesAsync();
             await _userManager.UpdateAsync(user);
             return room;
+            
+  
         }
 
         public async Task<Room?> GetRoomById(int id)
         {
-            var room = await _context.Rooms
+            var room = _context.Rooms
                             .Include(r => r.Owner)
                             .Include(r => r.Address)
-                            .Include(r => r.SavedBy)
-                            .FirstOrDefaultAsync(r => r.Id == id);
-            return room;
+                            .Include(r => r.SavedBy);
+
+            return await room.FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task<RoomsResponse> GetRooms(RoomQueryObject queryObject)
         {
             var rooms = _context.Rooms
-                            .Include(r => r.Owner)
-                            .Include(r => r.Address)
-                            .Include(r => r.SavedBy)
-                            .AsQueryable();
-  
+                .Include(r => r.Owner)             
+                .Include(r => r.Address)          
+                .Include(r => r.SavedBy)          
+                    .ThenInclude(u => u.Rooms)     
+                .AsQueryable();
+
+     
             if (queryObject.MinPrice.HasValue)
             {
                 rooms = rooms.Where(r => r.Price >= queryObject.MinPrice);
@@ -117,6 +128,7 @@ namespace RoommateBackend.Repositories
             }
             if (queryObject.BathCounts != null)
             {
+            
                 rooms = rooms.Where(r => queryObject.BathCounts.Contains(r.BathCount));
             }
             if (queryObject.MinSize.HasValue)
@@ -127,19 +139,19 @@ namespace RoommateBackend.Repositories
             {
                 rooms = rooms.Where(r => r.Size <= queryObject.MaxSize);
             }
-            if (queryObject.City != null)
+            if (queryObject.City != null && queryObject.City != "")
             {
                 rooms = rooms.Where(r => r.Address.City == queryObject.City);
             }
-            if (queryObject.Town != null)
+            if (queryObject.Town != null && queryObject.Town != "")
             {
                 rooms = rooms.Where(r => r.Address.Town == queryObject.Town);
             }
-            if (queryObject.Country != null)
+            if (queryObject.Country != null && queryObject.Country != "")
             {
                 rooms = rooms.Where(r => r.Address.Country == queryObject.Country);
             }
-            if (queryObject.Street != null)
+            if (queryObject.Street != null && queryObject.Street != "")
             {
                 rooms = rooms.Where(r => r.Address.Street == queryObject.Street);
             }
@@ -185,12 +197,14 @@ namespace RoommateBackend.Repositories
                 double minLon = (double)(queryObject.Longitude - (queryObject.Distance / (111.0 * Math.Cos((double)(queryObject.Latitude * Math.PI / 180.0)))));
                 rooms = rooms.Where(r => r.Address.Latitude <= maxLat && r.Address.Latitude >= minLat && r.Address.Longitude <= maxLon && r.Address.Longitude >= minLon);
             }
-            rooms = rooms.Skip((queryObject.Page - 1) * queryObject.PageSize).Take(queryObject.PageSize);
+        
+            var skip = (queryObject.Page - 1) * queryObject.PageSize;
+            var result = rooms.Skip(skip).Take(queryObject.PageSize).ToList();
             
             return new RoomsResponse
             {
-                Rooms = rooms.Select(r => r.ToRoomDto()).ToList(),
-                TotalCount = 1,
+                Rooms = result.Select(r => r.ToRoomDto()).ToList(),
+                TotalPage = (int)Math.Ceiling((double)rooms.Count() / queryObject.PageSize),
                 Page = queryObject.Page,
                 PageSize = queryObject.PageSize
             };
@@ -199,23 +213,39 @@ namespace RoommateBackend.Repositories
 
         public async Task<Room?> UpdateRoom(int id, string userId, UpdateRoomDto room)
         {
-            var existingRoom = await _context.Rooms.FindAsync(id);
+           
+            var existingRoom = _context.Rooms
+                                .Include(r => r.Owner)
+                                .Include(r => r.Address)
+                                .Include(r => r.SavedBy)
+                                .FirstOrDefault(r => r.Id == id);
+       
             if (existingRoom == null)
             {
-                return null;
+                throw new Exception("Room not found.");
             }
             if (existingRoom.OwnerId != userId)
             {
-                return null;
+                throw new Exception("You are not the owner of this room.");
             }
+                
             existingRoom.Price = Convert.ToDouble(room.Price);
             existingRoom.RoomCount = Convert.ToInt32(room.RoomCount);
             existingRoom.BathCount = Convert.ToInt32(room.BathCount);
             existingRoom.Images = room.Images.Select(i => Convert.FromBase64String(i)).ToList();
             existingRoom.Size = Convert.ToDouble(room.Size);
             existingRoom.About = room.About;
-            existingRoom.UpdatedAt = room.UpdatedAt;
-            existingRoom.Address.UpdateRoomAddress(room.Address);
+            existingRoom.UpdatedAt = room.UpdatedAt;    
+            existingRoom.Address.Street = room.Address.Street;
+            existingRoom.Address.City = room.Address.City;
+            existingRoom.Address.Town = room.Address.Town;
+            existingRoom.Address.Country = room.Address.Country;
+            existingRoom.Address.BuildingNo = room.Address.BuildingNo;
+            existingRoom.Address.ApartmentNo = room.Address.ApartmentNo;
+            existingRoom.Address.ZipCode = room.Address.ZipCode;
+            existingRoom.Address.Latitude = room.Address.Latitude;
+            existingRoom.Address.Longitude = room.Address.Longitude;
+           
             var result = _context.Rooms.Update(existingRoom);
             await _context.SaveChangesAsync();
             return result.Entity;
