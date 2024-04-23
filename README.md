@@ -15,6 +15,9 @@ Roommate is a web application designed to help users find roommates and share ac
 - **C#**: The primary programming language used for developing the backend logic.
 - **Entity Framework Core**: Used for data access and database management.
 
+## Documentation
+- You can find it [here](https://azizkzgn2.github.io/RoommateBackend/)
+
 ## Getting Started
 1. **Clone the Repository:**
    ```bash
