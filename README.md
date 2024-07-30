@@ -1,31 +1,31 @@
-# Roommate
+# Storm
 
 Roommate is a web application designed to help users find roommates and share accommodations. It allows users to create accounts, post room advertisements, and save listings for future reference. The app is built using ASP.NET Core Web API.
 
 ## Features
 
 - **User Authentication**: Secure user authentication system allowing users to create accounts and log in securely.
-- **Room Advertisement Creation**: Easily create and post room advertisements with details like location, rent, amenities, and more.
-- **Save Favorite Listings**: Users can save their favorite room listings to quickly access them later.
-- **API Integration**: Utilizes ASP.NET Core Web API for backend functionality, ensuring robust and efficient communication between the client and server.
+- Real-time messaging
+- Send and receive text messages
 
 ## Technologies Used
 
-- **ASP.NET Core Web API**: Provides the backend framework for handling HTTP requests and responses.
-- **C#**: The primary programming language used for developing the backend logic.
-- **Entity Framework Core**: Used for data access and database management.
+- **ASP.NET Core Web API**
+- **C#**
+- **Entity Framework Core**
+- **SignalR**
 
 ## Documentation
-- You can find it [here](https://azizkzgn2.github.io/RoommateBackend/)
+- You can find it [here](https://azizkzgn2.github.io/StormBackend/)
 
 ## Getting Started
 1. **Clone the Repository:**
    ```bash
-   git clone https://github.com/AzizKizgin/RoommateBackend.git
+   git clone https://github.com/AzizKizgin/StormBackend.git
    ```
 2. **Navigate to the Project Directory:**
    ```bash
-   cd RoommateBackend
+   cd StormBackend
    ```
 3. **Install Dependencies:**
    ```bash
@@ -33,9 +33,8 @@ Roommate is a web application designed to help users find roommates and share ac
    ```
 4. **Change Database Connection String in appsettings.json:**
     ```bash
-    "ConnectionStrings": {
-    "sqlConnection": "your connection string"
-    },
+   create a .env file to root of the project and add your database connection as:
+    CONNECTION_STRING= "Your connection string"
    ```
 6. **Add Migrations and Update Database:**
    ```bash
@@ -47,7 +46,7 @@ Roommate is a web application designed to help users find roommates and share ac
    dotnet run
    ```
 8. **Access the App:**
-  Open your web browser and navigate to `http://localhost:5031`.
+  Open your web browser and navigate to `[http://localhost:5031](http://localhost:5117)`.
 
 ## Frontend
-You can find roommate app for iOS [here](https://github.com/AzizKizgin/Roommate)
+You can find roommate app for iOS [here](https://github.com/AzizKizgin/Storm)
